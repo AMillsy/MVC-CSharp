@@ -1,6 +1,7 @@
 ﻿using BulkyBookWeb.Data;
 using BulkyBookWeb.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace BulkyBookWeb.Controllers
@@ -39,7 +40,8 @@ namespace BulkyBookWeb.Controllers
             {
                 _db.Categories.Add(obj);
                 _db.SaveChanges();
-                return RedirectToAction("Index");
+				TempData["success"] = "Category Created Successfully";
+				return RedirectToAction("Index");
             }
 
             return View(obj);
@@ -76,6 +78,7 @@ namespace BulkyBookWeb.Controllers
 			{
 				_db.Categories.Update(obj);
 				_db.SaveChanges();
+				TempData["success"] = "Category Edited Successfully";
 				return RedirectToAction("Index");
 			}
 
@@ -100,22 +103,19 @@ namespace BulkyBookWeb.Controllers
         }
 
         //POST
-        [HttpPost]
+        [HttpPost,ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public IActionResult Delete(Category obj)
-        {
-            if (obj.Name == obj.DisplayOrder.ToString())
+        public IActionResult DeletePOST(int? id)
+        { 
+            var obj = _db.Categories.Find(id);
+            if (obj == null)
             {
-                ModelState.AddModelError("name", "Display Order cannot match the name");
+                return NotFound();
             }
-            if (ModelState.IsValid)
-            {
-                _db.Categories.Update(obj);
-                _db.SaveChanges();
-                return RedirectToAction("Index");
-            }
-
-            return View(obj);
+            _db.Categories.Remove(obj);
+            _db.SaveChanges();
+            TempData["success"] = "Category Deleted Successfully";
+            return RedirectToAction("Index");
         }
 
     }

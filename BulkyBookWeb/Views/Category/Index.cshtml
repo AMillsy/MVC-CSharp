@@ -2,6 +2,10 @@
 @{
     ViewData["Title"] = "Index";
 }
+@if(TempData["success"] != null)
+{
+    <h2>@TempData["success"]</h2>
+}
 
 <div class="container p-3">
     <div class="row p-4">
@@ -38,6 +42,7 @@
                 <td>
                     <div class="w-75 btn-group" role="group">
                             <a asp-controller="Category" asp-action="Edit" asp-route-id="@obj.Id" class="btn btn-toolbar"><i class="bi bi-pencil-fill"></i> &nbsp; Edit</a>
+                            <a asp-controller="Category" asp-action="Delete" asp-route-id="@obj.Id" class="btn btn-danger"><i class="bi bi-trash3-fill"></i> &nbsp; Delete</a>
                     </div>
                 </td>
             </tr>
