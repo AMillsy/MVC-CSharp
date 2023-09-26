@@ -44,5 +44,79 @@ namespace BulkyBookWeb.Controllers
 
             return View(obj);
         }
+
+		//Get
+		public IActionResult Edit(int? id)
+		{
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var category = _db.Categories.Find(id);
+            //var categoryFirst = _db.Categories.FirstOrDefault(u => u.Id == id);
+			//var categorySingle = _db.Categories.SingleOrDefault(u => u.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+			return View(category);
+		}
+
+		//POST
+		[HttpPost]
+		[ValidateAntiForgeryToken]
+		public IActionResult Edit(Category obj)
+		{
+			if (obj.Name == obj.DisplayOrder.ToString())
+			{
+				ModelState.AddModelError("name", "Display Order cannot match the name");
+			}
+			if (ModelState.IsValid)
+			{
+				_db.Categories.Update(obj);
+				_db.SaveChanges();
+				return RedirectToAction("Index");
+			}
+
+			return View(obj);
+		}
+
+        public IActionResult Delete(int? id)
+        {
+            if (id == null || id == 0)
+            {
+                return NotFound();
+            }
+            var category = _db.Categories.Find(id);
+            //var categoryFirst = _db.Categories.FirstOrDefault(u => u.Id == id);
+            //var categorySingle = _db.Categories.SingleOrDefault(u => u.Id == id);
+
+            if (category == null)
+            {
+                return NotFound();
+            }
+            return View(category);
+        }
+
+        //POST
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public IActionResult Delete(Category obj)
+        {
+            if (obj.Name == obj.DisplayOrder.ToString())
+            {
+                ModelState.AddModelError("name", "Display Order cannot match the name");
+            }
+            if (ModelState.IsValid)
+            {
+                _db.Categories.Update(obj);
+                _db.SaveChanges();
+                return RedirectToAction("Index");
+            }
+
+            return View(obj);
+        }
+
     }
 }
